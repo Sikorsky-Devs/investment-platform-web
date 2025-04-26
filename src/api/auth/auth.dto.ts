@@ -1,16 +1,12 @@
 import { z } from "zod";
 
-export const signUpSchema = z.object({
-  email: z.string().email("Невірний формат електронної пошти"),
-  password: z.string().min(8, "Пароль повинен містити не менше 8 символів"),
-  accountType: z.enum(["SHELTER", "VOLUNTEER"], {
-    errorMap: () => ({ message: "Неправильний тип аккаунту" }),
-  }),
-});
-
 export const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 6 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+export const signUpSchema = signInSchema.extend({
+  isLegal: z.boolean(),
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

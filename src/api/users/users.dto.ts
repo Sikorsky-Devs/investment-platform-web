@@ -5,14 +5,9 @@ export const updateUserSchema = z.object({
   middleName: z.string().optional(),
   lastName: z.string().optional(),
   name: z.string().optional(),
-  shelterType: z.enum(["SHELTER", "CLINIC", "KENNEL", "OTHER"]).optional(),
-  address: z.string().optional(),
   description: z.string().optional(),
-  donationLink: z
-    .string()
-    .url("Please enter a valid URL")
-    .optional()
-    .or(z.literal("")),
+  isLegal: z.boolean().optional(),
+  isApproved: z.boolean().optional(),
   currentPassword: z.string().optional(),
   newPassword: z
     .string()

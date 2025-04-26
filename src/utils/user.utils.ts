@@ -1,3 +1,5 @@
+import type { User } from "@/types/user";
+
 export const getUserName = (
   name?: string | null,
   firstName?: string | null,
@@ -21,4 +23,9 @@ export const getFullName = (
   if (firstName && lastName) return `${firstName} ${lastName}`;
   if (firstName && !lastName) return firstName;
   return "Не вказано";
+};
+
+export const getUserType = (user: User) => {
+  if (user.isLegal) return "Юридична особа";
+  return "Фізична особа";
 };

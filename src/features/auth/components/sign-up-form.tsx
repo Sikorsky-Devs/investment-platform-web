@@ -4,14 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { signUp } from "@/api/auth/auth.api";
-import { type SignUpFormData, signUpSchema } from "@/api/auth/auth.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ROUTES } from "@/constants/navigation";
 import { cn } from "@/utils/styles.utils";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { signUpSchema, type SignUpFormData } from "@/api/auth/auth.dto";
 
 interface SignUpFormProps {
   className?: string;
@@ -23,24 +24,20 @@ const SignUpForm = ({ className }: SignUpFormProps) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormData & { accountType: "SHELTER" | "VOLUNTEER" }>({
-    resolver: zodResolver(
-      signUpSchema.extend({
-        accountType: z.enum(["SHELTER", "VOLUNTEER"]),
-      }),
-    ),
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
-      accountType: "VOLUNTEER",
+      email: "",
+      password: "",
+      isLegal: false,
     },
   });
 
-  const onSubmit = async (
-    data: SignUpFormData & { accountType: "SHELTER" | "VOLUNTEER" },
-  ) => {
+  const onSubmit = async (data: SignUpFormData) => {
     try {
       await signUp({
         ...data,
-        accountType: data.accountType,
+        isLegal: !!data.isLegal,
       });
       toast.success("Акаунт успішно створено", {
         description:
@@ -81,6 +78,31 @@ const SignUpForm = ({ className }: SignUpFormProps) => {
           type="password"
           {...register("password")}
         />
+
+        <div className="space-y-2">
+          <RadioGroup
+            defaultValue="false"
+            className="flex gap-4"
+            {...register("isLegal", {
+              setValueAs: (value) => value === "true",
+            })}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="true" id="isLegal" />
+              <Label htmlFor="isLegal">Фізична особа</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="false" id="notIsLegal" />
+              <Label htmlFor="notIsLegal">Юридична особа</Label>
+            </div>
+          </RadioGroup>
+          {errors.isLegal && (
+            <p className="text-destructive text-sm font-medium">
+              {errors.isLegal.message}
+            </p>
+          )}
+        </div>
+
         <Button isLoading={isSubmitting} type="submit" className="w-full">
           Зареєструватися
         </Button>

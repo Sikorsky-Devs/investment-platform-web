@@ -104,6 +104,21 @@ export const getMe = async () => {
     }
 
     return (await response.json()) as User;
+
+    // const mockUser: User = {
+    //   id: "12345",
+    //   email: "mockuser@example.com",
+    //   firstName: "John",
+    //   lastName: "Doe",
+    //   middleName: "A",
+    //   name: "John A. Doe",
+    //   description: "This is a mock user.",
+    //   role: "user",
+    //   isApproved: true,
+    //   isLegal: false,
+    //   avatarLink: "https://example.com/avatar.jpg",
+    // };
+    // return mockUser;
   } catch (e) {
     throw e;
   }

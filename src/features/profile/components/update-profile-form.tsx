@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { User } from "@/types/user";
+import { serialize } from "v8";
 
 interface ProfileUpdateFormProps {
   user: User;
@@ -50,6 +51,7 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
       middleName: user.middleName ?? "",
       lastName: user.lastName ?? "",
       name: user.name ?? "",
+
       newPassword: "",
     },
   });
@@ -168,40 +170,46 @@ const ProfileUpdateForm = ({ user, closeModal }: ProfileUpdateFormProps) => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-4">
-          <Input
-            id="firstName"
-            label="Ім'я"
-            error={errors.firstName?.message}
-            placeholder="Іван"
-            {...register("firstName")}
-          />
+          {!user.isLegal && (
+            <Input
+              id="name"
+              label="Назва"
+              error={errors.name?.message}
+              placeholder="Назва організації або повне ім'я"
+              {...register("name")}
+            />
+          )}
 
-          <Input
-            id="middleName"
-            label="По батькові"
-            error={errors.middleName?.message}
-            placeholder="Петрович"
-            {...register("middleName")}
-          />
+          {user.isLegal && (
+            <>
+              <Input
+                id="firstName"
+                label="Ім'я"
+                error={errors.firstName?.message}
+                placeholder="Іван"
+                {...register("firstName")}
+              />
 
-          <Input
-            id="lastName"
-            label="Прізвище"
-            error={errors.lastName?.message}
-            placeholder="Коваленко"
-            {...register("lastName")}
-          />
+              <Input
+                id="middleName"
+                label="По батькові"
+                error={errors.middleName?.message}
+                placeholder="Петрович"
+                {...register("middleName")}
+              />
+
+              <Input
+                id="lastName"
+                label="Прізвище"
+                error={errors.lastName?.message}
+                placeholder="Коваленко"
+                {...register("lastName")}
+              />
+            </>
+          )}
         </div>
 
         <div className="space-y-4">
-          <Input
-            id="address"
-            label="Адреса"
-            error={errors.address?.message}
-            placeholder="вул. Шевченка 123, Київ, Україна"
-            {...register("address")}
-          />
-
           <Input
             id="currentPassword"
             type="password"
